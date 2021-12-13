@@ -1,11 +1,23 @@
 steps:
-  # Docker Build
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 
-           'gcr.io/${PROJECT_ID}/blue', 
-           '.']
+  # Build the container image
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/color:$REVISION_ID", "."]
 
-  # Docker Push
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 
-           'gcr.io/${PROJECT_ID}/blue' ]
+  # Push the container image to Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/color:$REVISION_ID"]
+
+  # Deploy container image to Cloud Run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      - "run"
+      - "deploy"
+      - "color"
+      - "--image"
+      - "gcr.io/$PROJECT_ID/color:$REVISION_ID"
+      - "--region"
+      - "europe-west1"
+logsBucket: 'gs://mylogsbucket2'
+options:
+  logging: GCS_ONLY
