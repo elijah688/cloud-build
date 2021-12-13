@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  blue:
+     image: gcr.io/playground-s-11-552cd826/blue:latest 
+     tty: true
+     stdin_open: true
+     container_name: blue
+     working_dir: /app
+     ports:
+       - 8080:8080
+  red:
+     image:  gcr.io/playground-s-11-552cd826/red:latest
+     tty: true
+     stdin_open: true
+     container_name: red 
+     working_dir: /app
+     ports:
+       - 8081:8080
+
+  #app:
+  #  build: .
+  #  tty: true
+  #  stdin_open: true
+  #  container_name: app
+  #  working_dir: /app
+  #  ports:
+  #    - 8080:8080
