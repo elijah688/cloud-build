@@ -1,11 +1,9 @@
 steps:
-  # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 
-           'gcr.io/${PROJECT_ID}/blue', 
-           '.']
-
-  # Docker Push
+    args: ['build', '-t', 'gcr.io/cloud-run-de-195-f39da2ac/blue', '.']
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 
-           'gcr.io/${PROJECT_ID}/blue' ]
+           'gcr.io/cloud-run-de-195-f39da2ac/blue' ]
+logsBucket: 'gs://mylogsbucket'
+    options:
+      logging: GCS_ONLY
