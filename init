@@ -1,0 +1,8 @@
+ gcloud projects list |
+   awk '/run/ {print $1}' | 
+   head -n 1 | 
+   xargs gcloud config set project;
+
+gcloud services enable run.googleapis.com
+gcloud services enable cloudbuild.googleapis.com 
+gcloud services enable containerregistry.googleapis.com
