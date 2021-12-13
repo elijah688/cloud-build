@@ -1,11 +1,35 @@
 steps:
-  # Docker Build
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 
-           'gcr.io/${PROJECT_ID}/blue', 
-           '.']
+  # Build the container image
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$REVISION_ID", "."]
 
-  # Docker Push
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 
-           'gcr.io/${PROJECT_ID}/blue' ]
+  # Push the container image to Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$REVISION_ID"]
+
+  # Deploy container image to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+  # - name: "gcr.io/cloud-builders/gcloud@sha256:4ea77d19d7336d5a8dc4ae0e609d7f5b45fca067c34b70d7ed6740af229392c6"
+    # entrypoint: gcloud
+    args:
+      - "run"
+      - "deploy"
+      - "${_SERVICE_NAME}"
+      - "--image"
+      - "gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$REVISION_ID"
+      - "--region"
+      - "${_REGION}"
+      - '--platform'
+      - 'managed'
+      - "--port"
+      - "8080"
+      - "--allow-unauthenticated"
+
+logsBucket: 'gs://mylogsbucket11'
+
+substitutions:
+  _SERVICE_NAME: color
+  _REGION: europe-west1
+
+# images:
+# - "gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$REVISION_ID"
